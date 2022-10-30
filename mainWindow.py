@@ -24,6 +24,25 @@ class MainWindow(QMainWindow):
         self.ui.actionGuardar_archivo.triggered.connect(self.actionSaveFile)
         #Table
         self.ui.btnMostrarTabla.clicked.connect(self.mostrarTabla)
+        self.ui.btnBuscar.clicked.connect(self.buscarId)
+    
+    @Slot()
+    def buscarId(self):
+        id = self.ui.lineEditTabla.text()
+        encontrado = False
+        for particula in self.particulas:
+            if id == str(particula.id):
+                self.ui.tableWidget.clear()
+                self.ui.tableWidget.setRowCount(1)
+                self.viewData(0,particula)
+                encontrado = True
+                return
+        if not encontrado:
+            QMessageBox.warning(
+                self,"Atencion",f'El id "{id}" no se encuentra'
+            )
+                
+                
     
     @Slot()
     def mostrarTabla(self):
@@ -34,29 +53,31 @@ class MainWindow(QMainWindow):
         self.ui.tableWidget.setRowCount(len(self.particulas))
         row = 0
         for particula in self.particulas:
-            id_widget = QTableWidgetItem(str(particula.id))
-            origen_x_widget = QTableWidgetItem(str(particula.origen_x))
-            origen_y_widget = QTableWidgetItem(str(particula.origen_y))
-            destino_x_widget = QTableWidgetItem(str(particula.destino_x))
-            destino_y_widget = QTableWidgetItem(str(particula.destino_y))
-            velocidad_widget = QTableWidgetItem(str(particula.velocidad))
-            red_widget = QTableWidgetItem(str(particula.red))
-            green_widget = QTableWidgetItem(str(particula.green))
-            blue_widget = QTableWidgetItem(str(particula.blue))
-            distancia_widget = QTableWidgetItem(str(particula.distancia))
-
-            self.ui.tableWidget.setItem(row,0,id_widget)
-            self.ui.tableWidget.setItem(row,1,origen_x_widget)
-            self.ui.tableWidget.setItem(row,2,origen_y_widget)
-            self.ui.tableWidget.setItem(row,3,destino_x_widget)
-            self.ui.tableWidget.setItem(row,4,destino_y_widget)
-            self.ui.tableWidget.setItem(row,5,velocidad_widget)
-            self.ui.tableWidget.setItem(row,6,red_widget)
-            self.ui.tableWidget.setItem(row,7,green_widget)
-            self.ui.tableWidget.setItem(row,8,blue_widget)
-            self.ui.tableWidget.setItem(row,9,distancia_widget)
-            
-            row += 1
+            self.viewData(row,particula)
+            row +=1 
+       
+    def viewData(self,row,particula):
+        id_widget = QTableWidgetItem(str(particula.id))
+        origen_x_widget = QTableWidgetItem(str(particula.origen_x))
+        origen_y_widget = QTableWidgetItem(str(particula.origen_y))
+        destino_x_widget = QTableWidgetItem(str(particula.destino_x))
+        destino_y_widget = QTableWidgetItem(str(particula.destino_y))
+        velocidad_widget = QTableWidgetItem(str(particula.velocidad))
+        red_widget = QTableWidgetItem(str(particula.red))
+        green_widget = QTableWidgetItem(str(particula.green))
+        blue_widget = QTableWidgetItem(str(particula.blue))
+        distancia_widget = QTableWidgetItem(str(particula.distancia))
+        
+        self.ui.tableWidget.setItem(row,0,id_widget)
+        self.ui.tableWidget.setItem(row,1,origen_x_widget)
+        self.ui.tableWidget.setItem(row,2,origen_y_widget)
+        self.ui.tableWidget.setItem(row,3,destino_x_widget)
+        self.ui.tableWidget.setItem(row,4,destino_y_widget)
+        self.ui.tableWidget.setItem(row,5,velocidad_widget)
+        self.ui.tableWidget.setItem(row,6,red_widget)
+        self.ui.tableWidget.setItem(row,7,green_widget)
+        self.ui.tableWidget.setItem(row,8,blue_widget)
+        self.ui.tableWidget.setItem(row,9,distancia_widget)
         
     @Slot()
     def actionOpenFile(self):
